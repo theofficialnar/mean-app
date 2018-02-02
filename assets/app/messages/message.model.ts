@@ -1,8 +1,13 @@
 export class Message {
-  constructor (
-    public content: string,
-    public username: string,
-    public messageId?: string,
-    public userId?: string
-  ) {}
+  content: String;
+  username: String;
+  messageId?: String;
+  userId?: String;
+
+  constructor (content: String, username: String, messageId?: String, userId?: String) {
+    this.content = content;
+    this.username = username;
+    this.messageId = messageId;
+    this.userId = userId;
+  }
 }
