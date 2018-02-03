@@ -1,0 +1,15 @@
+<div class="col-md-8 col-md-offset-2">
+
+  <!-- pass value of self referenced #f to onSubmit method
+    #f="ngForm" gives f access to values contained in ngForm
+    ngNativeValidate re-enables native form validation through required-->
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm" ngNativeValidate>
+    <div class="form-group">
+      <label for="content">Content</label>
+
+      <!-- ngModel -> tells angular that this input should be registered as a control for the form derived by angular -->
+      <input type="text" id="content" class="form-control" ngModel name="content" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+</div>
