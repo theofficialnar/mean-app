@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
           <li routerLinkActive="active"><a [routerLink]="['/auth']">Authentication</a></li>
         </ul>
       </nav>
-    </header>  
+    </header>    
   `
 })
 

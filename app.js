@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
 app.use('/', appRoutes);
 
 // catch 404 and forward to error handler
+// forwards error 404 back to the index page
 app.use(function (req, res, next) {
     return res.render('index');
 });
