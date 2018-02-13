@@ -8,8 +8,7 @@ import { MessageService } from "./message.service";
     <div class="col-md-8 col-md-offset-2">
       <!-- message refers to the local variable set on *ngFor, * means structural directive -->
       <app-message
-        [message]="message"
-        (editClicked)="message.content = $event"
+        [message-input-field]="message"        
         *ngFor="let message of messages">
       </app-message>
     </div> 
@@ -18,11 +17,17 @@ import { MessageService } from "./message.service";
 
 export class MessageListComponent implements OnInit {
   messages: Message[];
-
   constructor (private messageService: MessageService) {}
 
   //executed once the component has been initialized by angular
   ngOnInit () {
-    this.messages = this.messageService.getMessages();
+    this.messageService
+      .getMessages()
+      .subscribe(
+        //success callback
+        (messages: Message[]) => {
+          this.messages = messages;
+        }
+      );
   }
 }
