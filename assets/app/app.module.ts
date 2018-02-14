@@ -13,6 +13,7 @@ import { LogoutComponent } from './auth/logout.component';
 import { SigninComponent } from './auth/signin.component';
 import { SignupComponent } from './auth/signup.component';
 import { HttpModule } from '@angular/http';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,11 @@ import { HttpModule } from '@angular/http';
         ReactiveFormsModule,
 
         //import HttpModule to unlock Http service
-        HttpModule],
+        HttpModule
+    ],
+    
+    //setup providers to be used for whole app module
+    providers: [AuthService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
