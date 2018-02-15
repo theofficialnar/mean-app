@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { ObjectID } = require('mongoDB');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const User = require('../models/user')
+const User = require('../models/user');
 
 router.post('/', async (req, res) => {
   let user = new User({
@@ -25,6 +26,41 @@ router.post('/', async (req, res) => {
       errorMsg: error
     });
   };
+});
+
+router.post('/signin', async (req, res) => {
+  try {
+    const user = await User.findOne({email: req.body.email});
+    if (!user) {
+      return res.status(500).json({
+        title: 'Login failed',
+        errorMsg: {message: 'Invalid login credentials'}
+      });
+    };
+
+    //check if password is correct
+    if (!bcrypt.compareSync(req.body.password, user.password)) {
+      return res.status(500).json({
+        title: 'Login failed',
+        errorMsg: {message: 'Invalid login credentials'}
+      });
+    };
+
+    //create token for the user
+    const token = jwt.sign({user}, 'somesecretkey', {expiresIn: 7200});
+    res.status(200).json({
+      title: 'Login successful',
+      token,
+      userId: user._id
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      title: 'An error occured',
+      errorMsg: error
+    });
+  };
+  
 });
 
 module.exports = router;
