@@ -15,10 +15,10 @@ export class SignupComponent implements OnInit{
 
   onSubmit () {
     const user = new User(
-      this.signupForm.value.firstName,
-      this.signupForm.value.lastName,
+      this.signupForm.value.email,
       this.signupForm.value.password,
-      this.signupForm.value.email
+      this.signupForm.value.firstName,
+      this.signupForm.value.lastName
     );
     this.authService
       .signup(user)
@@ -27,7 +27,7 @@ export class SignupComponent implements OnInit{
         error => console.error(error)
       );
     
-    // console.log(this.signupForm);
+    console.log(user);
     this.signupForm.reset();
   }
   

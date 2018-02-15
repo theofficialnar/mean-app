@@ -7,17 +7,17 @@ const User = require('../models/user')
 
 router.post('/', async (req, res) => {
   let user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    password: bcrypt.hashSync(req.body.password, 10),
     email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 10),
+    firstName: req.body.firstName,
+    lastName: req.body.lastName
   });
 
   try {
-    const user = await user.save();  
+    const result = await user.save();
     res.status(201).json({
       title: 'User created',
-      obj: user
+      obj: result
     });
   } catch (error) {
     res.status(500).json({
@@ -25,6 +25,6 @@ router.post('/', async (req, res) => {
       errorMsg: error
     });
   };
-})
+});
 
 module.exports = router;
