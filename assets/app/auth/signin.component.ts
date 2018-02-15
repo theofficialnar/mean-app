@@ -14,6 +14,7 @@ export class SigninComponent {
   constructor (private authService: AuthService, private router: Router) {};
   onSubmit () {
     // console.log(this.signupForm);
+    
     const user = new User(this.signinForm.value.email, this.signinForm.value.password);
     this.authService.signin(user)
       .subscribe(
@@ -22,10 +23,10 @@ export class SigninComponent {
           localStorage.setItem('token', data.token);
           localStorage.setItem('userId', data.userId);
           //go back to root after login
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/messages');
         },
         error => console.error(error)
-      )
+      );
     this.signinForm.reset();
   }
   

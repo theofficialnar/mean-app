@@ -14,6 +14,7 @@ import { SigninComponent } from './auth/signin.component';
 import { SignupComponent } from './auth/signup.component';
 import { HttpModule } from '@angular/http';
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
 
 @NgModule({
     declarations: [
@@ -39,7 +40,7 @@ import { AuthService } from './auth/auth.service';
     ],
     
     //setup providers to be used for whole app module
-    providers: [AuthService],
+    providers: [AuthService, AuthGuard],
     bootstrap: [AppComponent]
 })
 export class AppModule {

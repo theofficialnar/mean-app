@@ -7,7 +7,7 @@ import { AUTH_ROUTES } from './auth/auth.routes';
 const APP_ROUTES: Routes = [
   // pathMatch: 'full' -> tells angular to only redirect when nothing else is on the url
   { path: '', redirectTo: '/messages', pathMatch: 'full' },
-  { path: 'messages', component: MessagesComponent },
+  { path: 'messages', component: MessagesComponent},
   
   // use children to add nested routes
   { path: 'auth', component: AuthenticationComponent, children: AUTH_ROUTES }
