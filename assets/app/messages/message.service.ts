@@ -20,10 +20,11 @@ export class MessageService {
     // convert data to JSON
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type' : 'application/json'});
+    const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
 
     //set up the observable
     return this.http
-      .post('http://localhost:3000/message', body, {headers: headers})
+      .post(`http://localhost:3000/message${token}`, body, {headers: headers})
 
       // extract data attached to response and converts to object
       .map((response: Response) => {
@@ -65,8 +66,9 @@ export class MessageService {
   updateMessage (message: Message) {
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type' : 'application/json'});
+    const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
     return this.http
-      .patch(`http://localhost:3000/message/${message.messageId}`, body, {headers: headers})
+      .patch(`http://localhost:3000/message/${message.messageId}${token}`, body, {headers: headers})
       .map((response: Response) => response.json())
       .catch((error: Response) => Observable.throw(error.json()));
   }
@@ -74,8 +76,9 @@ export class MessageService {
   //deletes the message from the server
   deleteMessage (message: Message) {
     this.messages.splice(this.messages.indexOf(message), 1);
+    const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
     return this.http
-    .delete(`http://localhost:3000/message/${message.messageId}`)
+    .delete(`http://localhost:3000/message/${message.messageId}${token}`)
     .map((response: Response) => response.json())
     .catch((error: Response) => Observable.throw(error.json()));
   }

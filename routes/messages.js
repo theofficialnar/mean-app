@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { ObjectID } = require('mongoDB');
+const jwt = require('jsonwebtoken');
 
 const Message = require('../models/message');
+const User = require('../models/user');
 
 //get all messages
 router.get('/', async (req, res) => {
@@ -20,18 +22,47 @@ router.get('/', async (req, res) => {
   };
 });
 
+//middleware to check if user has a valid token
+router.use('/', async (req, res, next) => {
+  try {
+    const decoded = await jwt.verify(req.query.token, 'somesecretkey');
+    if (decoded) next();
+  } catch (error) {
+    res.status(401).json({
+      title: 'Not Authenticated',
+      errorMsg: error
+    });
+  };
+});
+
 //post new message
 router.post('/', async (req, res) => {
-  let message = new Message({
-    content : req.body.content
-  });
-  
+  const decoded = jwt.decode(req.query.token);
   try {
-    const result = await message.save();
-    res.status(201).json({
-      title: 'Message saved',
-      obj: result
+    const user = await User.findById(decoded.user._id);
+    let message = new Message({
+      content : req.body.content,
+      user: user._id
     });
+    
+    try {
+      const result = await message.save();
+
+      //push message created to the user's messages array
+      user.messages.push(result);
+      user.save();
+
+      res.status(201).json({
+        title: 'Message saved',
+        obj: result
+      });
+    } catch (error) {
+      res.status(500).json({
+        title: 'An error occured',
+        errorMsg: error
+      });
+    };
+
   } catch (error) {
     res.status(500).json({
       title: 'An error occured',
