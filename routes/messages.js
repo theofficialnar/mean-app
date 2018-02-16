@@ -73,6 +73,7 @@ router.post('/', async (req, res) => {
 
 //update message
 router.patch('/:id', async (req, res) => {
+  const decoded = jwt.decode(req.query.token);
   const id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res.status(404).json({
@@ -82,87 +83,86 @@ router.patch('/:id', async (req, res) => {
   };
 
   try {
-    const message = await Message.findOneAndUpdate({
-      _id : id
-    }, {
-      $set : {content : req.body.content}
-    }, {
-      new : true
-    });
-
-    if (!message) {
-      return res.status(404).json({
-        title: 'No message retrieved',
-        errorMsg: {message: 'Message not found'}
-      })
-    };
-
-    res.status(200).json({
-      title: 'Message updated',
-      obj: message
-    });
-  } catch (error) {
-    res.status(500).json({
-      title: 'An error occured',
-      errorMsg: error
-    });
-  }
-
-  // try {
-  //   const message = await Message.findById(id);
-  //   if (!message) {
-  //     return res.status(404).json({
-  //       title: 'No message retrieved',
-  //       errorMsg: {message: 'Message not found'}
-  //     })
-  //   };
-  //   message.content = req.body.content;
-  //   try {
-  //     const result = await message.save();
-  //     res.status(200).json({
-  //       title: 'Message updated',
-  //       obj: result
-  //     });
-  //   } catch (error) {
-  //     res.status(500).json({
-  //       title: 'An error occured',
-  //       errorMsg: error
-  //     });
-  //   };
-  // } catch (error) {
-  //   res.status(500).json({
-  //     title: 'An error occured',
-  //     errorMsg: error
-  //   });
-  // };
-});
-
-// delete message
-router.delete('/:id', async (req, res) => {
-  const id = req.params.id;
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).json({
-      title: 'An error occured',
-      errorMsg: {message: 'ID not found'}
-    })
-  };
-
-  try {
-    const message = await Message.findOneAndRemove({
-      _id : id
-    });
-
-    if (!message) {
+    const messageId = await Message.findById(id);
+    if (!messageId) {
       return res.status(404).json({
         title: 'No message deleted',
         errorMsg: {message: 'Message not found'}
       })
     };
 
-    res.status(200).json({
-      title: 'Message deleted',
-      obj: message
+    //check if user is deleting messages they created
+    if (messageId.user.toString() !== decoded.user._id) {
+      return res.status(401).json({
+        title: 'Not Authenticated',
+        errorMsg: {message: 'Users do not match'}
+      });
+    };
+
+    try {
+      messageId.content = req.body.content;
+      const updatedMessage = await messageId.save();
+      res.status(200).json({
+        title: 'Message updated',
+        obj: updatedMessage
+      });
+    } catch (error) {
+      res.status(500).json({
+        title: 'An error occured',
+        errorMsg: error
+      });
+    };
+
+  } catch (error) {
+    res.status(500).json({
+      title: 'An error occured',
+      errorMsg: error
     });
+  }
+});
+
+// delete message
+router.delete('/:id', async (req, res) => {
+  const decoded = jwt.decode(req.query.token);
+  const id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).json({
+      title: 'An error occured',
+      errorMsg: {message: 'ID not found'}
+    })
+  };
+
+  try {
+    const messageId = await Message.findById(id);
+    if (!messageId) {
+      return res.status(404).json({
+        title: 'No message deleted',
+        errorMsg: {message: 'Message not found'}
+      })
+    };
+
+    //check if user is deleting messages they created
+    if (messageId.user.toString() !== decoded.user._id) {
+      return res.status(401).json({
+        title: 'Not Authenticated',
+        errorMsg: {message: 'Users do not match'}
+      });
+    };
+
+    //if user = message creator proceed
+    try {
+      const deletedMessage = await messageId.remove();
+      res.status(200).json({
+        title: 'Message deleted',
+        obj: deletedMessage
+      });
+    } catch (error) {
+      res.status(500).json({
+        title: 'An error occured',
+        errorMsg: error
+      });
+    };
+    
   } catch (error) {
     res.status(500).json({
       title: 'An error occured',
