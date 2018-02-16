@@ -15,7 +15,7 @@ var schema = new Schema({
 });
 
 //run after a 'remove'
-schema.post('remove', function (message) {
+schema.post('findOneAndRemove', function (message) {
   User.findById(message.user, function (error, user) {
     user.messages.pull(message._id);
     user.save();

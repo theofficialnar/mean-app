@@ -24,6 +24,9 @@ var schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Message'
   }]
+}, {
+  //makes sure that new messages will be pushed to the messages array above
+  usePushEach: true
 });
 
 schema.plugin(mongooseUniqueValidator);
