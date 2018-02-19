@@ -9,7 +9,7 @@ const User = require('../models/user');
 //get all messages
 router.get('/', async (req, res) => {
   try {
-    const msgs = await Message.find();
+    const msgs = await Message.find().populate('user', 'firstName');
     res.status(200).json({
       title: 'Messages succesfully retrieved',
       obj: msgs
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
     const user = await User.findById(decoded.user._id);
     let message = new Message({
       content : req.body.content,
-      user: user._id
+      user: user
     });
     
     try {

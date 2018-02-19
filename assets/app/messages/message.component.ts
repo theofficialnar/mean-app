@@ -43,4 +43,9 @@ export class MessageComponent{
         result => console.log(result)
       );
   }
+  
+  //shows the edit / delete button if this function returns true
+  belongsToUser () {
+    return localStorage.getItem('userId') == this.message.userId;
+  }
 }

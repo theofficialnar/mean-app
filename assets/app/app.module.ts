@@ -15,6 +15,8 @@ import { SignupComponent } from './auth/signup.component';
 import { HttpModule } from '@angular/http';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
+import { ErrorComponent } from './errors/error.component';
+import { ErrorService } from './errors/error.service';
 
 @NgModule({
     declarations: [
@@ -27,7 +29,8 @@ import { AuthGuard } from './auth/auth.guard';
         HeaderComponent,
         LogoutComponent,
         SigninComponent,
-        SignupComponent
+        SignupComponent,
+        ErrorComponent
     ],
     imports: [
         BrowserModule,
@@ -40,7 +43,7 @@ import { AuthGuard } from './auth/auth.guard';
     ],
     
     //setup providers to be used for whole app module
-    providers: [AuthService, AuthGuard],
+    providers: [AuthService, AuthGuard, ErrorService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
