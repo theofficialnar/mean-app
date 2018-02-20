@@ -21,5 +21,5 @@ import { authRouting } from "./auth.routing";
 })
 
 export class AuthModule {
-  
+ 
 }
