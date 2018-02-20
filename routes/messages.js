@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 const Message = require('../models/message');
