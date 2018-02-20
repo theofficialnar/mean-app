@@ -1,45 +1,29 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
 import { AppComponent } from './app.component';
-import { MessageComponent } from './messages/message.component';
-import { MessageListComponent } from './messages/message-list.component';
-import { MessageInputComponent } from './messages/message-input.component';
-import { MessagesComponent } from './messages/messages.component';
 import { AuthenticationComponent } from './auth/authentication.component';
 import { HeaderComponent } from './header.component';
 import { routing } from './app.routing';
-import { LogoutComponent } from './auth/logout.component';
-import { SigninComponent } from './auth/signin.component';
-import { SignupComponent } from './auth/signup.component';
-import { HttpModule } from '@angular/http';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { ErrorComponent } from './errors/error.component';
 import { ErrorService } from './errors/error.service';
+import { MessageModule } from './messages/message.module';
 
 @NgModule({
     declarations: [
         AppComponent,
-        MessageComponent,
-        MessageListComponent,
-        MessageInputComponent,
-        MessagesComponent,
-        AuthenticationComponent,
+        AuthenticationComponent, //used in routing so placed in app.module
         HeaderComponent,
-        LogoutComponent,
-        SigninComponent,
-        SignupComponent,
         ErrorComponent
     ],
     imports: [
         BrowserModule,
-        FormsModule,
         routing,
-        ReactiveFormsModule,
-
-        //import HttpModule to unlock Http service
-        HttpModule
+        HttpModule, //import HttpModule to unlock Http services
+        MessageModule
     ],
     
     //setup providers to be used for whole app module
