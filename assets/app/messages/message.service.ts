@@ -26,13 +26,14 @@ export class MessageService {
     //set up the observable
     return this.http
       .post(`https://nar-mean-app.herokuapp.com/message${token}`, body, {headers: headers})
+      // .post(`http://localhost:3000/message${token}`, body, {headers: headers})
 
       // extract data attached to response and converts to object
       .map((response: Response) => {
 
         //makes sure that newly added message has it's _id prop
         const result = response.json();
-        const newMessage = new Message(result.obj.content, result.obj.user.firstName, result.obj._id, result.obj.user._id);
+        const newMessage = new Message(result.obj.content, result.firstName, result.obj._id, result.obj.user);
         this.messages.push(newMessage);
         return newMessage;
       })
@@ -46,6 +47,7 @@ export class MessageService {
   //gets all messages stored on the server
   getMessages () {
     return this.http.get('https://nar-mean-app.herokuapp.com/message')
+    // return this.http.get('http://localhost:3000/message')
       .map((response: Response) => {
         const messages = response.json().obj;
 
@@ -77,6 +79,7 @@ export class MessageService {
     const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
     return this.http
       .patch(`https://nar-mean-app.herokuapp.com/message/${message.messageId}${token}`, body, {headers: headers})
+      // .patch(`http://localhost:3000/message/${message.messageId}${token}`, body, {headers: headers})
       .map((response: Response) => response.json())
       .catch((error: Response) => {
         this.errorService.handleError(error.json());
@@ -90,6 +93,7 @@ export class MessageService {
     const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
     return this.http
     .delete(`https://nar-mean-app.herokuapp.com/message/${message.messageId}${token}`)
+    // .delete(`http://localhost:3000/message/${message.messageId}${token}`)
     .map((response: Response) => response.json())
     .catch((error: Response) => {
       this.errorService.handleError(error.json());

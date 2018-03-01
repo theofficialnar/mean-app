@@ -9,6 +9,7 @@ const User = require('../models/user');
 //get all messages
 router.get('/', async (req, res) => {
   try {
+    //populate -> expand data first argument content you want to expand, 2nd data you want to retrieve
     const msgs = await Message.find().populate('user', 'firstName');
     res.status(200).json({
       title: 'Messages succesfully retrieved',
@@ -42,7 +43,7 @@ router.post('/', async (req, res) => {
     const user = await User.findById(decoded.user._id);
     let message = new Message({
       content : req.body.content,
-      user: user
+      user: user._id
     });
     
     try {
@@ -54,7 +55,8 @@ router.post('/', async (req, res) => {
 
       res.status(201).json({
         title: 'Message saved',
-        obj: result
+        obj: result,
+        firstName: user.firstName
       });
     } catch (error) {
       res.status(500).json({
